@@ -18,7 +18,12 @@ export const convertLangChainMessageToVercelMessage = (message: BaseMessage) => 
     return {
       content: message.content,
       role: 'assistant',
-      tool_calls: (message as AIMessage).tool_calls,
+      parts: (message as AIMessage).tool_calls,
+    };
+  } else if (message.getType() === 'tool') {
+    return {
+      content: message.content,
+      role: 'system',
     };
   } else {
     return { content: message.content, role: message.getType() };

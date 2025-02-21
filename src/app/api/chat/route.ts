@@ -7,6 +7,7 @@ import { SerpAPI } from '@langchain/community/tools/serpapi';
 import { SystemMessage } from '@langchain/core/messages';
 
 import { convertVercelMessageToLangChainMessage } from '@/utils/message-converters';
+import { logToolCallsInDevelopment } from '@/utils/stream-logging';
 
 export const runtime = 'edge';
 
@@ -58,8 +59,12 @@ export async function POST(req: NextRequest) {
      */
     const eventStream = agent.streamEvents({ messages }, { version: 'v2' });
 
-    return LangChainAdapter.toDataStreamResponse(eventStream);
+    // Log tool calling data. Only in development mode
+    const transformedStream = logToolCallsInDevelopment(eventStream);
+
+    return LangChainAdapter.toDataStreamResponse(transformedStream);
   } catch (e: any) {
+    console.log(e);
     return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
   }
 }
