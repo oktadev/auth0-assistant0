@@ -1,8 +1,8 @@
 import type { Message } from 'ai/react';
-
+import { MemoizedMarkdown } from './MemoizedMarkdown';
 import { cn } from '@/utils/cn';
 
-export function ChatMessageBubble(props: { message: Message; aiEmoji?: string; sources: any[] }) {
+export function ChatMessageBubble(props: { message: Message; aiEmoji?: string }) {
   return (
     <div
       className={cn(
@@ -17,31 +17,8 @@ export function ChatMessageBubble(props: { message: Message; aiEmoji?: string; s
         </div>
       )}
 
-      <div className="whitespace-pre-wrap flex flex-col">
-        <span>{props.message.content}</span>
-
-        {props.sources && props.sources.length ? (
-          <>
-            <code className="mt-4 mr-auto bg-primary px-2 py-1 rounded">
-              <h2>🔍 Sources:</h2>
-            </code>
-            <code className="mt-1 mr-2 bg-primary px-2 py-1 rounded text-xs">
-              {props.sources?.map((source, i) => (
-                <div className="mt-2" key={'source:' + i}>
-                  {i + 1}. &quot;{source.pageContent}&quot;
-                  {source.metadata?.loc?.lines !== undefined ? (
-                    <div>
-                      <br />
-                      Lines {source.metadata?.loc?.lines?.from} to {source.metadata?.loc?.lines?.to}
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              ))}
-            </code>
-          </>
-        ) : null}
+      <div className="chat-message-bubble whitespace-pre-wrap flex flex-col prose dark:prose-invert max-w-none">
+        <MemoizedMarkdown content={props.message.content} id={props.message.id} />
       </div>
     </div>
   );

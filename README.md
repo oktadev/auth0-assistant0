@@ -1,6 +1,6 @@
 ## Assistant0: An AI Personal Assistant Secured with Auth0
 
-Imagine an AI personal assistant that consolidates your digital life by dynamically accessing multiple tools to help you stay organized and efficient. Here’s how it could work:
+Assistant0 an AI personal assistant that consolidates your digital life by dynamically accessing multiple tools to help you stay organized and efficient. Here’s some of the features that can be implemented:
 
 1. **Gmail Integration:** The assistant regularly scans your inbox to generate concise summaries. It highlights urgent emails, categorizes conversations by importance, and even suggests drafts for quick replies.
 2. **Calendar Management:** By interfacing with your calendar, it can remind you of upcoming meetings, check for scheduling conflicts, and even propose the best time slots for new appointments based on your availability.
@@ -15,25 +15,15 @@ Building such an assistant is not that difficult. Thanks to frameworks like [Lan
 
 Many current solutions involve storing credentials and secrets in the AI agent application’s environment or letting the agent impersonate the user. This is not a good idea, as it can lead to security vulnerabilities and excessive scope and access for the AI agent.
 
-When you build an AI agent, you need to consider all the other security implications of it as well. You don't want an LLM to have unlimited access to your personal data like email and documents, and more importantly, you don't want to provide your credentials to the LLM to access these tools. Let's face it, regardless of how secure the LLM is, there is always a possibility of it getting manipulated into divulging sensitive information or doing something you don't want it to do.
-
 ### Tool Calling with the Help of Auth0
 
 This is where Auth0 comes to the rescue. As the leading identity provider (IdP) for modern applications, our upcoming product, [Auth for GenAI](https://auth0.com/blog/auth-for-genai/), provides standardized ways built on top of OAuth and OpenID Connect to call APIs of tools on behalf of the end user from your AI agent.
 
-Auth0 becomes the proxy between your AI agent and the tools you want to call. This way, the agent and LLM do not have access to the credentials and can only call the tools with the permissions you have defined in Auth0. This also means your AI agent only needs to talk to Auth0 for authentication and not the tools directly, making integrations easier.
-
-#### Call first-party APIs on users' behalf
-
-When your AI agent, secured with Auth0, wants to call another API secured with Auth0 on the same tenant, you can use the standard OAuth 2 flows, like Authorization Code Flow, to get an API token from that application with user consent. In this case, Auth0 provides the API access token to the AI agent.
-
-#### Call third-party APIs on users' behalf
-
-When your AI agent, secured with Auth0, wants to call external services like Gmail, Calendar, Slack, and Google Drive, Auth0 can help the agent get access tokens for the external service on behalf of the end user. In this case, Auth0 brokers the API access token from the external service to the AI agent.
+Auth0 brokers a secure and controlled handshake between the AI agents and the services you want the agent to interact with on your behalf – in the form of scoped access tokens. This way, the agent and LLM do not have access to the credentials and can only call the tools with the permissions you have defined in Auth0. This also means your AI agent only needs to talk to Auth0 for authentication and not the tools directly, making integrations easier.
 
 ![Tool calling with Federated API token exchange](https://images.ctfassets.net/23aumh6u8s0i/1gY1jvDgZHSfRloc4qVumu/d44bb7102c1e858e5ac64dea324478fe/tool-calling-with-federated-api-token-exchange.jpg)
 
-This is made possible by Federated API token exchange, which is a way to obtain an access token from an external identity provider without the need for the user to re-authenticate every time. The end user authenticates and connects the external service once, and Auth0 intermediates the authentication and authorization process and provides the API access token to the AI agent. Auth0 takes care of storing refresh tokens and getting new access tokens when the current access token expires.
+[Learn more](https://auth0.com/blog/genai-tool-calling-intro/)
 
 ## About the template
 
@@ -71,7 +61,7 @@ bun dev # or npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result! Ask the bot something and you'll see a streamed response:
 
-![A streaming conversation between the user and the AI](/public/images/chat-conversation.png)
+![A streaming conversation between the user and the AI](/public/images/home-page.png)
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -79,12 +69,10 @@ Backend logic lives in `app/api/chat/route.ts`. From here, you can change the pr
 
 ## 📦 Bundle size
 
-![bundle-size](/public/images/bundle-size.png)
-
 This package has [@next/bundle-analyzer](https://www.npmjs.com/package/@next/bundle-analyzer) set up by default - you can explore the bundle size interactively by running:
 
 ```bash
-$ ANALYZE=true npm run build
+$ ANALYZE=true bun run build
 ```
 
 ## License
