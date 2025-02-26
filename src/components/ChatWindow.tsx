@@ -139,10 +139,10 @@ export function ChatWindow(props: {
         });
       }
     },
-    onError: (e) =>
-      toast.error(`Error while processing your request`, {
-        description: e.message,
-      }),
+    onError: (e) => {
+      console.error('Error: ', e);
+      toast.error(`Error while processing your request`, { description: e.message });
+    },
   });
 
   function isChatLoading(): boolean {
