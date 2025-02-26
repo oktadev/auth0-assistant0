@@ -3,7 +3,9 @@ import { type Message, LangChainAdapter } from 'ai';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { ChatOpenAI } from '@langchain/openai';
 import { Calculator } from '@langchain/community/tools/calculator';
+import { SerpAPI } from '@langchain/community/tools/serpapi';
 import { SystemMessage } from '@langchain/core/messages';
+
 import { convertVercelMessageToLangChainMessage } from '@/utils/message-converters';
 import { logToolCallsInDevelopment } from '@/utils/stream-logging';
 
@@ -28,7 +30,8 @@ export async function POST(req: NextRequest) {
       .filter((message: Message) => message.role === 'user' || message.role === 'assistant')
       .map(convertVercelMessageToLangChainMessage);
 
-    const tools = [new Calculator()];
+    // Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
+    const tools = [new Calculator(), new SerpAPI()];
     const chat = new ChatOpenAI({
       model: 'gpt-4',
       temperature: 0,
