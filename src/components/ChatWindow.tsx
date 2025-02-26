@@ -15,22 +15,13 @@ import { cn } from '@/utils/cn';
 function ChatMessages(props: {
   messages: Message[];
   emptyStateComponent: ReactNode;
-  sourcesForMessages: Record<string, any>;
   aiEmoji?: string;
   className?: string;
 }) {
   return (
     <div className="flex flex-col max-w-[768px] mx-auto pb-12 w-full">
       {props.messages.map((m, i) => {
-        const sourceKey = (props.messages.length - 1 - i).toString();
-        return (
-          <ChatMessageBubble
-            key={m.id}
-            message={m}
-            aiEmoji={props.aiEmoji}
-            sources={props.sourcesForMessages[sourceKey]}
-          />
-        );
+        return <ChatMessageBubble key={m.id} message={m} aiEmoji={props.aiEmoji} />;
       })}
     </div>
   );
@@ -120,24 +111,13 @@ export function ChatWindow(props: {
   placeholder?: string;
   emoji?: string;
 }) {
-  const [sourcesForMessages, setSourcesForMessages] = useState<Record<string, any>>({});
-
   const chat = useChat({
     api: props.endpoint,
     onFinish(response) {
       console.log('Final response: ', response?.content);
     },
     onResponse(response) {
-      const sourcesHeader = response.headers.get('x-sources');
-      const sources = sourcesHeader ? JSON.parse(Buffer.from(sourcesHeader, 'base64').toString('utf8')) : [];
-
-      const messageIndexHeader = response.headers.get('x-message-index');
-      if (sources.length && messageIndexHeader !== null) {
-        setSourcesForMessages({
-          ...sourcesForMessages,
-          [messageIndexHeader]: sources,
-        });
-      }
+      console.log('Response received. Status:', response.status);
     },
     onError: (e) => {
       console.error('Error: ', e);
@@ -168,7 +148,6 @@ export function ChatWindow(props: {
               aiEmoji={props.emoji}
               messages={chat.messages}
               emptyStateComponent={props.emptyStateComponent}
-              sourcesForMessages={sourcesForMessages}
             />
           )
         }
