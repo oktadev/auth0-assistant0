@@ -13,6 +13,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^4.0.2",
     "@langchain/community": "^0.3.31",
     "@langchain/core": "^0.3.40",
     "@langchain/langgraph": "^0.2.46",
