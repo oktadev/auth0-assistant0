@@ -29,9 +29,9 @@ Auth0 brokers a secure and controlled handshake between the AI agents and the se
 
 This template scaffolds an Auth0 + LangChain.js + Next.js starter app. It mainly uses the following libraries:
 
-- [LangGraph.js](https://langchain-ai.github.io/langgraphjs/) and LangChain's framework for building agentic workflows.
+- [LangGraph.js](https://langchain-ai.github.io/langgraphjs/) and [LangChain's JavaScript framework](https://js.langchain.com/docs/introduction/) for building agentic workflows.
 - Vercel's [AI SDK](https://github.com/vercel-labs/ai) to stream tokens to the client and display the incoming messages.
-- The Auth0 [AI SDK](https://github.com/auth0-lab/auth0-ai-js) and [Next.js SDK](https://github.com/auth0/nextjs-auth0) to secure the application and call third-party APIs.
+- The [Auth0 AI SDK](https://github.com/auth0-lab/auth0-ai-js) and [Auth0 Next.js SDK](https://github.com/auth0/nextjs-auth0) to secure the application and call third-party APIs.
 
 It's Vercel's free-tier friendly too! Check out the [bundle size stats below](#-bundle-size).
 
