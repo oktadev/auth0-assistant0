@@ -2,16 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { type Message, LangChainAdapter } from 'ai';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { ChatOpenAI } from '@langchain/openai';
+import { SystemMessage } from '@langchain/core/messages';
 import { Calculator } from '@langchain/community/tools/calculator';
 import { SerpAPI } from '@langchain/community/tools/serpapi';
-import { SystemMessage } from '@langchain/core/messages';
+import { GmailSearch } from '@langchain/community/tools/gmail';
+import { GmailCreateDraft } from '@langchain/community/tools/gmail';
 
+import { getGoogleAccessToken } from '@/lib/auth0';
 import { convertVercelMessageToLangChainMessage } from '@/utils/message-converters';
 import { logToolCallsInDevelopment } from '@/utils/stream-logging';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
-const AGENT_SYSTEM_TEMPLATE = `You are a personal assistant named Assistant0. You are a helpful assistant that can answer questions and help with tasks. You have access to a set of tools, use the tools as needed to answer the user's question.`;
+const AGENT_SYSTEM_TEMPLATE = `You are a personal assistant named Assistant0. You are a helpful assistant that can answer questions and help with tasks. You have access to a set of tools, use the tools as needed to answer the user's question. Render the email body as a markdown block, do not wrap it in code blocks.`;
 
 /**
  * This handler initializes and calls an tool calling ReAct agent.
@@ -30,13 +33,26 @@ export async function POST(req: NextRequest) {
       .filter((message: Message) => message.role === 'user' || message.role === 'assistant')
       .map(convertVercelMessageToLangChainMessage);
 
-    // Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
-    const tools = [new Calculator(), new SerpAPI()];
     const chat = new ChatOpenAI({
-      model: 'gpt-4',
+      model: 'gpt-4o-mini',
       temperature: 0,
     });
 
+    // Get the access token via Auth0
+    const accessToken = await getGoogleAccessToken();
+
+    // Provide the access token to the Gmail tools
+    const gmailParams = {
+      credentials: { accessToken },
+    };
+
+    const tools = [
+      new Calculator(),
+      // Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
+      new SerpAPI(),
+      new GmailSearch(gmailParams),
+      new GmailCreateDraft(gmailParams),
+    ];
     /**
      * Use a prebuilt LangGraph agent.
      */

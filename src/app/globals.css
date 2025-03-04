@@ -98,6 +98,7 @@
 
   .chat-message-bubble pre {
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
   .chat-message-bubble blockquote {
