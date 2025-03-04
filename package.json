@@ -13,7 +13,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^4.0.2",
+    "@auth0/nextjs-auth0": "/home/deepu/Workspace/okta/gen-ai/nextjs-auth0/auth0-nextjs-auth0-4.0.1.tgz",
     "@langchain/community": "^0.3.31",
     "@langchain/core": "^0.3.40",
     "@langchain/langgraph": "^0.2.46",
