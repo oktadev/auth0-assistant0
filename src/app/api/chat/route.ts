@@ -42,18 +42,16 @@ export async function POST(req: NextRequest) {
       temperature: 0,
     });
 
+    // Get the access token via Auth0
+    const accessToken = await getGoogleAccessToken();
+
     // Provide the access token to the Gmail tools
     const gmailParams = {
-      credentials: {
-        accessToken: await getGoogleAccessToken(),
-      },
+      credentials: { accessToken },
     };
 
     const googleCalendarParams = {
-      credentials: {
-        accessToken: await getGoogleAccessToken(),
-        calendarId: 'primary',
-      },
+      credentials: { accessToken, calendarId: 'primary' },
       model: chat,
     };
 
