@@ -7,6 +7,7 @@ import { Calculator } from '@langchain/community/tools/calculator';
 import { SerpAPI } from '@langchain/community/tools/serpapi';
 import { GmailSearch } from '@langchain/community/tools/gmail';
 import { GmailCreateDraft } from '@langchain/community/tools/gmail';
+import { GoogleCalendarCreateTool, GoogleCalendarViewTool } from '@langchain/community/tools/google_calendar';
 
 import { getGoogleAccessToken } from '@/lib/auth0';
 import { convertVercelMessageToLangChainMessage } from '@/utils/message-converters';
@@ -46,12 +47,19 @@ export async function POST(req: NextRequest) {
       credentials: { accessToken },
     };
 
+    const googleCalendarParams = {
+      credentials: { accessToken, calendarId: 'primary' },
+      model: chat,
+    };
+
     const tools = [
       new Calculator(),
       // Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
       new SerpAPI(),
       new GmailSearch(gmailParams),
       new GmailCreateDraft(gmailParams),
+      new GoogleCalendarCreateTool(googleCalendarParams),
+      new GoogleCalendarViewTool(googleCalendarParams),
     ];
     /**
      * Use a prebuilt LangGraph agent.
